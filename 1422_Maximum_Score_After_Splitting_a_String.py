@@ -36,17 +36,25 @@ Output: 3
 """
 
 class Solution:
-    def isVowel(self, c: str) -> bool:
-        return c in 'aeiou'
-    
-    def vowelStrings(self, words: List[str], queries: List[List[int]]) -> List[int]:
-        v = [1 if self.isVowel(word[0]) and self.isVowel(word[-1]) else 0 for word in words]
-        pref = [0] * len(v)
-        pref[0] = v[0]
-        for i in range(1, len(v)):
-            pref[i] = pref[i - 1] + v[i]
-        
-        ans = []
-        for l, r in queries:
-            ans.append(pref[r] if l == 0 else pref[r] - pref[l - 1])
-        return ans
+    def count_zero_one(self, s):
+        zero_count, one_count = 0, 0
+        for i in range(len(s)):
+            if s[i] == '0':
+                zero_count += 1
+            else:
+                one_count += 1
+        return zero_count, one_count
+
+    def maxScore(self, s: str) -> int:
+        if len(s) == 0:
+            return 0
+        score = []
+        for i in range(len(s)):
+            left = s[:i+1]
+            right = s[i+1:]
+            if len(left) == 0 or len(right) == 0:
+                continue
+            num_zeros, _ = self.count_zero_one(left)
+            _, num_ones = self.count_zero_one(right)
+            score.append(num_zeros+num_ones)
+        return max(score)
